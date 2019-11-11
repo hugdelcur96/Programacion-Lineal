@@ -44,6 +44,8 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
             indice_salida = min(A_simplex(1:m, n+m+1) ./ A(1:m, indice_entrada));
         end
         
+        
+        
         iter = iter + 1;
     end
     
