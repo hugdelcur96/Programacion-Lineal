@@ -33,11 +33,13 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     
     A_simplex(m + 1, 1:n+m+1) = -c_simplex;
     A_simplex(1:m, n+m+1) = b;
+    N = 1:m; % Vector de no básicas.
+    B = m:m+n; % Vector de básicas.
     
     
     % Empezamos el algoritmo del método simplex por la regla de mayor
     % descenso
-    
+  
     iter = 0;
     
     MaxNumIter = 100;
@@ -53,20 +55,33 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
             break
         end
         
-        [mx, e] = max(A_simplex(m+1, 1:n+m)); % mx es el máximo, e es el índice del máximo.
-        % Sin tener en cuenta el ahorro r0.
+        [mx, e] = max(A_simplex(m+1, 1:n+m)); % mx es el máximo, e es el 
+        %índice del máximo. Sin tener en cuenta el ahorro r0.
+        
+        %Definimos a h y a Hse.
         h = A_simplex(1:m, n+m+1); %Lado derecho del método simplex.
         Hse = A_simplex(1:m, e); % Columna del vector de entrada.
-        HseN = zeros(m);
+        
         %Creamos al vector Hse nuevo para ver qué variable sale.
+        HseN = zeros(m);
+
         for i = 1:m %las columnas 
             if Hse(i) > 0
             HseN(i) = h(i) / Hse(i);
             end
         end
-        [mn, s] = min(HseN); % mn es el mínimo, e es el índice del mínimo.
-
-        A_simplex(s, 1:n+m+1) = A_simplex(s, :) / A_simplex(s, e);
+        [mn, s] = min(HseN); % mn es el mínimo, s es el índice del mínimo,
+        %pero usando de referencia el vector B.
+        varEntrada = e; %índice de la variable de entrada.
+        varSalida = B(s); %índice de la variable de salida.
+        B(s) = varEntrada; %Nueva variable básica.
+        N(e) = varSalida; %Nueva variable no básica.
+        
+        % Dividimos el renglón de la nueva variable básica entre la 
+        % entrada (varEntrada, varSalida) para volver 1.
+        A_simplex(varSalida, 1:n+m+1) = A_simplex(varSalida, :) / A_simplex(varSalida, varEntrada);
+        
+        A_simplex(:)
         
         for i = 1:1:m+1
             if i ~= s
@@ -83,9 +98,6 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     end
     
 end
-
-
-
 
 
 
