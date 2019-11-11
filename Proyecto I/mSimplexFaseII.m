@@ -27,6 +27,26 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     A_simplex(m + 1, 1:n+m+1) = -c_simplex;
     A_simplex(1:m, n+m+1) = b;
     
+    
+    % Empezamos el algoritmo del método simplex por la regla de Bland
+    
+    iter = 0;
+    
+    while A_simplex(m + 1, 1:n+m) > 0
+        
+        if A_simplex(m + 1, 1:n+m) <= 0
+            break
+        end
+        
+        indice_entrada = min(find(A_simplex(m+1, 1:n+m));
+        
+        if A_simplex(1:m, find(A_simplex(1:m, indice_entrada))) > 0
+            indice_salida = min(A_simplex(1:m, n+m+1) ./ A(1:m, indice_entrada));
+        end
+        
+        iter = iter + 1;
+    end
+    
 end
 
 
