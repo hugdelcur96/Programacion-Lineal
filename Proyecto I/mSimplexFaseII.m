@@ -15,6 +15,7 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
         % Acabar el programa y regresar:
         % z0 = 0; 
         % x0 = null;
+        % iter = -1;
         % ban = -1;
         % Porque el conjunto factible es vacío.
     end
