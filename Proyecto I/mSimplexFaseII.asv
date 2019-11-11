@@ -12,11 +12,8 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     elseif b < 0
         error('El vector b tiene que ser mayor o igual que cero.')
         %%%%%% Sugerencia %%%%%%
-        % Acabar el programa y regresar:
-        % z0 = 0; 
-        % x0 = null;
-        % ban = -1;
-        % Porque el conjunto factible es vacío.
+        %Acabar el programa.
+        
     end
     
     %%%%% Se agregan variables de holgura %%%%%
