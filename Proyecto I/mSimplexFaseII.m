@@ -44,21 +44,28 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     
     for iteraciones = 1:MaxNumIter
         
-        fin = A_simplex(m+1, 1:n+m) > 0;
-        
-        if fin <= 0
+        fin = A_simplex(m+1, 1:n+m) > 0; % Vector lógico que dice si las 
+        %entradas del renglón de ahorro son menores iguales a 0 (0), mayores a 0 (1).
+        c = zeros(n+m);
+        if fin == c %Si todo el vector fin es cero i.e. todas las entradas
+            %del vector de ahorro son menores iguales a cero, acaba el 
+            % programa.
             break
         end
         
-        [a, e] = max(A_simplex(m+1, :)); % a es el máximo, e es el índice de .
-        
-        Xre = A_simplex(:, n+m+1) ./ A_simplex(:, e);
-        i = Xre <= 0;
-        d = Xre;
-        d(i) = inf;
-        
-        [q, s] = min(d);
-        
+        [mx, e] = max(A_simplex(m+1, 1:n+m)); % mx es el máximo, e es el índice del máximo.
+        % Sin tener en cuenta el ahorro r0.
+        h = A_simplex(1:m, n+m+1); %Lado derecho del método simplex.
+        Hse = A_simplex(1:m, e); % Columna del vector de entrada.
+        HseN = zeros(m);
+        %Creamos al vector Hse nuevo para ver qué variable sale.
+        for i = 1:m %las columnas 
+            if Hse(i) > 0
+            HseN(i) = h(i) / Hse(i);
+            end
+        end
+        [mn, s] = min(HseN); % mn es el mínimo, e es el índice del mínimo.
+
         A_simplex(s, 1:n+m+1) = A_simplex(s, :) / A_simplex(s, e);
         
         for i = 1:1:m+1
