@@ -28,25 +28,44 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     A_simplex(1:m, n+m+1) = b;
     
     
-    % Empezamos el algoritmo del método simplex por la regla de Bland
+    % Empezamos el algoritmo del método simplex por la regla de mayor
+    % descenso
     
     iter = 0;
     
-    while A_simplex(m + 1, 1:n+m) > 0
+    MaxNumIter = 100;
+    
+    for iteraciones = 1:MaxNumIter
         
-        if A_simplex(m + 1, 1:n+m) <= 0
+        fin = A_simplex(m+1, 1:n+m) > 0;
+        
+        if fin <= 0
             break
         end
         
-        indice_entrada = min(find(A_simplex(m+1, 1:n+m));
+        [a, e] = max(A_simplex(m+1, :)); % a es el máximo, e es el índice de .
         
-        if A_simplex(1:m, find(A_simplex(1:m, indice_entrada))) > 0
-            indice_salida = min(A_simplex(1:m, n+m+1) ./ A(1:m, indice_entrada));
+        Xre = A_simplex(:, n+m+1) ./ A_simplex(:, e);
+        i = Xre <= 0;
+        d = Xre;
+        d(i) = inf;
+        
+        [q, s] = min(d);
+        
+        A_simplex(s, 1:n+m+1) = A_simplex(s, :) / A_simplex(s, e);
+        
+        for i = 1:1:m+1
+            if i ~= s
+                A_simplex(i, :) = A_simplex(i, :) - A_simplex(i, e) * A_simplex(s, :);
+            end
         end
         
-        
-        
         iter = iter + 1;
+    end
+    
+    for i = 1:size(c, 2)
+        d = logical(A_simplex(:, i));
+        x0(i, 1) = A_simplex(d, end);
     end
     
 end
