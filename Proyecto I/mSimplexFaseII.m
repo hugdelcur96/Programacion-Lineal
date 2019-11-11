@@ -33,11 +33,13 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     
     A_simplex(m + 1, 1:n+m+1) = -c_simplex;
     A_simplex(1:m, n+m+1) = b;
+    N = 1:m; % Vector de no básicas.
+    B = m:n+n; % Vector de básicas.
     
     
     % Empezamos el algoritmo del método simplex por la regla de mayor
     % descenso
-    
+  
     iter = 0;
     
     MaxNumIter = 100;
@@ -55,10 +57,14 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
         
         [mx, e] = max(A_simplex(m+1, 1:n+m)); % mx es el máximo, e es el índice del máximo.
         % Sin tener en cuenta el ahorro r0.
+        
+        %Definimos a h y a Hse.
         h = A_simplex(1:m, n+m+1); %Lado derecho del método simplex.
         Hse = A_simplex(1:m, e); % Columna del vector de entrada.
-        HseN = zeros(m);
+        
         %Creamos al vector Hse nuevo para ver qué variable sale.
+        HseN = zeros(m);
+
         for i = 1:m %las columnas 
             if Hse(i) > 0
             HseN(i) = h(i) / Hse(i);
@@ -83,9 +89,6 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     end
     
 end
-
-
-
 
 
 
