@@ -9,7 +9,7 @@ function [x0, z0, ban, iter] = prueba3(A, b, c)
     ban = 0
     iter = 0
     
-    flagfase2 = 0
+    bandera = 0
     
     [m, n] = size(A)
     
@@ -17,21 +17,23 @@ function [x0, z0, ban, iter] = prueba3(A, b, c)
     N = 1:n
     B = n+1:m+n
     
+    % Costos básicos y no básicos
     cN = c(N)
     cB = zeros(1, m)
     c = [cN cB]
     
+    % Matriz básica y no básica
     AN = A(:, N)
     AB = eye(m)
     A = [AN AB]
     invAB = inv(AB)
     
-    xB = invAB * b'
-    w = cB * invAB
-    HRN = w * AN
+    xB = invAB * b'         % soluciones básicas
+    lambda = cB * invAB     % variables de holgura
+    HRN = lambda * AN       
     sN = cN - HRN
     
-    while flagfase2 == 0
+    while bandera == 0
         if ~all(sN >= 0) == 1
             [~, t] = min(sN)
             l = N(t)
@@ -73,14 +75,14 @@ function [x0, z0, ban, iter] = prueba3(A, b, c)
                 x0 = {}
                 z0 = {}
                 ban = 1
-                iter = iter + 1
+                iter
                 return
             end 
         else
             x0 = xB
             z0 = c(B) * xB
             ban = 0
-            iter = iter + 1
+            iter
             return
         end
     end
