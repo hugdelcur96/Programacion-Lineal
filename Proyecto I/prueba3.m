@@ -22,7 +22,7 @@ function [x0, z0, ban, iter] = prueba3(A, b, c)
     cB = zeros(1, m)
     c = [cN cB]
     
-    % Matriz básica y no básica
+    % Matriz básica, no básica y matriz extendida
     AN = A(:, N)
     AB = eye(m)
     A = [AN AB]
