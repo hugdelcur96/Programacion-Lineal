@@ -28,8 +28,7 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
     A_simplex(1:m, n+m+1) = b;
     
     
-    % Empezamos el algoritmo del método simplex por la regla de mayor
-    % descenso
+    % Empezamos el algoritmo del método simplex por la regla de mayor descenso.
     
     iter = 0;
     
@@ -43,14 +42,14 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
             break
         end
         
-        [a, e] = max(A_simplex(m+1, :)); % a es el máximo, e es el índice de .
+        [a, e] = max(A_simplex(m+1, :)); % a es el máximo, e es el índice de entrada.
         
         Xre = A_simplex(:, n+m+1) ./ A_simplex(:, e);
         i = Xre <= 0;
         d = Xre;
         d(i) = inf;
         
-        [q, s] = min(d);
+        [q, s] = min(d); % q es el valor mínimo, s es el índice de salida.
         
         A_simplex(s, 1:n+m+1) = A_simplex(s, :) / A_simplex(s, e);
         
@@ -63,23 +62,5 @@ function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
         iter = iter + 1;
     end
     
-    for i = 1:size(c, 2)
-        d = logical(A_simplex(:, i));
-        x0(i, 1) = A_simplex(d, end);
-    end
-    
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
