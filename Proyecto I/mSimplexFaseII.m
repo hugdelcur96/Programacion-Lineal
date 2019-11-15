@@ -1,4 +1,4 @@
-function [xo, zo, ban, iter] = prueba5(A, b, c)
+function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
     
     % Inicializamos la salida
     xo = [];
