@@ -1,4 +1,5 @@
 function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
+
     
     % Inicializamos la salida
     xo = [];
@@ -8,15 +9,15 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
     bandera = 0;
     [m, n] = size(A);
     
-    % Conjuntos de índice iniciales
+    % Conjuntos de Ã­ndice iniciales
     N = 1:n;
     B = n+1:m+n;
     
-    % Costos básicos y no básicos
+    % Costos bÃ¡sicos y no bÃ¡sicos
     cN = c;
     cB = zeros(1, m);
     
-    % Matriz básica, no básica y matriz extendida iniciales
+    % Matriz bÃ¡sica, no bÃ¡sica y matriz extendida iniciales
     AN = A;
     AB = eye(m);
     lambda = (AB' \ cB')';
@@ -31,21 +32,21 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
         return
     end
     
-    % Método de mayor descenso
+    % MÃ©todo de mayor descenso
     while bandera == 0
         if ~all(rN <= 0) == 1
-            %Buscamos el índice del que entra.
+            %Buscamos el Ã­ndice del que entra.
             [maxi, t] = max(rN);
             e = N(t);
-            %Encontrar el índice del que sale.
+            %Encontrar el Ã­ndice del que sale.
             h = AB \ b';
             He = AB \ AN(:, t);
-            optTest = He > 0;       % cuántos valores son positivos de la columna pivote
+            optTest = He > 0;       % cuÃ¡ntos valores son positivos de la columna pivote
             if sum(optTest) > 0;
-                mrt = find(He > 0); % índices de la columna pivote que son positivos
-                hs_div = h(mrt) ./ He(mrt);     % división de h/hl
-                [mini, r] = min(hs_div);     % valor mínimo e índice de las divisiones
-                r = mrt(r);          % este ya es el índice de entrada final
+                mrt = find(He > 0); % Ã­ndices de la columna pivote que son positivos
+                hs_div = h(mrt) ./ He(mrt);     % divisiÃ³n de h/hl
+                [mini, r] = min(hs_div);     % valor mÃ­nimo e Ã­ndice de las divisiones
+                r = mrt(r);          % este ya es el Ã­ndice de entrada final
                 s = B(r);
                 
                 N(t) = B(r);
@@ -82,4 +83,5 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
             return
     end
     
+
 end
