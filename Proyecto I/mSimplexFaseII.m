@@ -1,6 +1,5 @@
 function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
 
-    
     % Inicializamos la salida
     xo = [];
     zo = [];
@@ -61,9 +60,8 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
                 cN(t) = aux2; 
 
                 lambda = (AB' \ cB')';
-                %lam = cB * inv(AB)
                 rN = lambda * AN - cN;
-
+                
                 iter = iter + 1; 
             else % cuando es no acotado
                 xo = [];
@@ -83,5 +81,4 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
             return
     end
     
-
 end
