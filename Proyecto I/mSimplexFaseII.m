@@ -1,87 +1,87 @@
-function [x0, z0, ban, iter] = mSimplexFaseII(A, b, c)
+function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
 
-    %clear all
-    %clc
-
+    
+    % Inicializamos la salida
+    xo = [];
+    zo = [];
+    ban = 0;
+    iter = 0;
+    bandera = 0;
     [m, n] = size(A);
     
-    if m ~= size(b)
-        error('El número de renglones de A y la dimensión de b no coinciden.')
-    elseif n ~= size(c)
-        error('El número de columnas de A y la dimensión de c no coinciden,')
-    elseif b < 0
-        error('El vector b tiene que ser mayor o igual que cero.')
-        %%%%%% Sugerencia %%%%%%
-        % Acabar el programa y regresar:
-        % z0 = 0; 
-        % x0 = null;
-        % ban = -1;
-        % Porque el conjunto factible es vacío.
+    % Conjuntos de Ã­ndice iniciales
+    N = 1:n;
+    B = n+1:m+n;
+    
+    % Costos bÃ¡sicos y no bÃ¡sicos
+    cN = c;
+    cB = zeros(1, m);
+    
+    % Matriz bÃ¡sica, no bÃ¡sica y matriz extendida iniciales
+    AN = A;
+    AB = eye(m);
+    lambda = (AB' \ cB')';
+    rN = lambda * AN - cN;
+    h = AB \ b';
+    
+    if ~all(b < 0) == 0
+        xo = [];
+        zo = [];
+        ban = -1;
+        iter;
+        return
     end
     
-    %%%%% Se agregan variables de holgura %%%%%
-    
-    A_simplex = zeros(m + 1, n + m + 1);
-    b_simplex = zeros(m + 1, 1);    
-    c_simplex = zeros(n + m + 1, 1);
-    
-    A_simplex(1:m, 1:n) = A;
-    A_simplex(1:m, n+1:n+m) = eye(m);
-    b_simplex(1:m) = b;
-    c_simplex(1:n) = c;
-    
-    A_simplex(m + 1, 1:n+m+1) = -c_simplex;
-    A_simplex(1:m, n+m+1) = b;
-    
-    
-    % Empezamos el algoritmo del método simplex por la regla de mayor
-    % descenso
-    
-    iter = 0;
-    
-    MaxNumIter = 100;
-    
-    for iteraciones = 1:MaxNumIter
-        
-        fin = A_simplex(m+1, 1:n+m) > 0;
-        
-        if fin <= 0
-            break
-        end
-        
-        [a, e] = max(A_simplex(m+1, :)); % a es el máximo, e es el índice de .
-        
-        Xre = A_simplex(:, n+m+1) ./ A_simplex(:, e);
-        i = Xre <= 0;
-        d = Xre;
-        d(i) = inf;
-        
-        [q, s] = min(d);
-        
-        A_simplex(s, 1:n+m+1) = A_simplex(s, :) / A_simplex(s, e);
-        
-        for i = 1:1:m+1
-            if i ~= s
-                A_simplex(i, :) = A_simplex(i, :) - A_simplex(i, e) * A_simplex(s, :);
+    % MÃ©todo de mayor descenso
+    while bandera == 0
+        if ~all(rN <= 0) == 1
+            %Buscamos el Ã­ndice del que entra.
+            [maxi, t] = max(rN);
+            e = N(t);
+            %Encontrar el Ã­ndice del que sale.
+            h = AB \ b';
+            He = AB \ AN(:, t);
+            optTest = He > 0;       % cuÃ¡ntos valores son positivos de la columna pivote
+            if sum(optTest) > 0;
+                mrt = find(He > 0); % Ã­ndices de la columna pivote que son positivos
+                hs_div = h(mrt) ./ He(mrt);     % divisiÃ³n de h/hl
+                [mini, r] = min(hs_div);     % valor mÃ­nimo e Ã­ndice de las divisiones
+                r = mrt(r);          % este ya es el Ã­ndice de entrada final
+                s = B(r);
+                
+                N(t) = B(r);
+                B(r) = e;
+                
+                aux1 = AB(:,r);
+                AB(:, r) = AN(:,t);
+                AN(:, t) = aux1;
+                
+                aux2 = cB(r);
+                cB(r) = cN(t);
+                cN(t) = aux2; 
+
+                lambda = (AB' \ cB')';
+                %lam = cB * inv(AB)
+                rN = lambda * AN - cN;
+
+                iter = iter + 1; 
+            else % cuando es no acotado
+                xo = [];
+                zo = [];
+                ban = 1;
+                iter;
+                return
             end
-        end
-        
-        iter = iter + 1;
+        else
+            xB = AB \ b';
+            xo(B) = xB;
+            xo(N) = 0;
+            xo = xo(1:n)';
+            zo = lambda * b';
+            ban = 0;
+            iter;
+            return
     end
     
-    for i = 1:size(c, 2)
-        d = logical(A_simplex(:, i));
-        x0(i, 1) = A_simplex(d, end);
-    end
-    
+
 end
-
-
-
-
-
-
-
-
-
-
