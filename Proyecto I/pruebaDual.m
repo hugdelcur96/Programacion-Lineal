@@ -39,15 +39,13 @@ function [xo, zo, ban, iter, lamo] = pruebaDual(A, b, c)
             r = mrt(r);
             s = B(r);
             
-            H = AB \ AN;
-            
+            H = AB \ AN;            
             Hs = H(r, :);
             optTest = Hs < 0;
             
             if sum(optTest) > 0;
                 mrt = find(Hs<0);
-
-                rN(mrt) ./ Hs(mrt);
+                
                 [a, t] = min(rN(mrt) ./ Hs(mrt));
 
                 e = N(mrt(t));
