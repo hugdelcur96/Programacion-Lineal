@@ -1,4 +1,4 @@
-function [xo, zo, ban, iter, lamo] = pruebaDual(A, b, c)
+function [xo, zo, ban, iter, lamo] = mSimplexDual(A, b, c)
     
     xo = [];
     zo = 0;
