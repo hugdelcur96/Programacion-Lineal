@@ -14,9 +14,9 @@ fprintf("Fin EJEMPLO 1\n")
 
 fprintf("\nEJEMPLO 2")
 
-A = [1 2 1; 2 -1 3];
-b = [3 4];
-c = [2 3 4];
+A = [1 2 3; 2 2 1];
+b = [5 6];
+c = [3 4 5];
 
 [xo, zo, ban, iter, lamo] = mSimplexDual(A, b, c)
 
