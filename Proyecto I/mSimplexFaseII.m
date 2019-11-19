@@ -1,6 +1,5 @@
 function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
 
-    % Inicializamos la salida
     xo = [];
     zo = [];
     ban = 0;
@@ -8,15 +7,12 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
     bandera = 0;
     [m, n] = size(A);
     
-    % Conjuntos de índice iniciales
     N = 1:n;
     B = n+1:m+n;
-    
-    % Costos básicos y no básicos
+     
     cN = c;
     cB = zeros(1, m);
     
-    % Matriz básica, no básica y matriz extendida iniciales
     AN = A;
     AB = eye(m);
     lambda = (AB' \ cB')';
@@ -31,21 +27,18 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
         return
     end
     
-    % Método de mayor descenso
     while bandera == 0
-        if ~all(rN <= 0) == 1
-            %Buscamos el índice del que entra.
+        if ~all(rN <= 0) == 1            
             [maxi, t] = max(rN);
-            e = N(t);
-            %Encontrar el índice del que sale.
+            e = N(t);            
             h = AB \ b';
             He = AB \ AN(:, t);
-            optTest = He > 0;       % cuántos valores son positivos de la columna pivote
+            optTest = He > 0;
             if sum(optTest) > 0;
-                mrt = find(He > 0); % índices de la columna pivote que son positivos
-                hs_div = h(mrt) ./ He(mrt);     % división de h/hl
-                [mini, r] = min(hs_div);     % valor mínimo e índice de las divisiones
-                r = mrt(r);          % este ya es el índice de entrada final
+                mrt = find(He > 0);
+                hs_div = h(mrt) ./ He(mrt);
+                [mini, r] = min(hs_div);
+                r = mrt(r);
                 s = B(r);
                 
                 N(t) = B(r);
@@ -63,7 +56,7 @@ function [xo, zo, ban, iter] = mSimplexFaseII(A, b, c)
                 rN = lambda * AN - cN;
                 
                 iter = iter + 1; 
-            else % cuando es no acotado
+            else
                 xo = [];
                 zo = [];
                 ban = 1;
